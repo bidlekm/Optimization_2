@@ -1,0 +1,36 @@
+clear; close all; clc;
+data = load('Assignment2\preprocessed_wdbc.dat');
+
+Y = data(:,2);
+X = data(:, 3:32);
+
+Y_train = Y(1:500,:);
+Y_test = Y(501:569,:);
+X_train = X(1:500,:);
+X_test = X(501:569,:);
+
+C = 1000;
+
+% Number of samples and features
+[num_samples, num_features] = size(X);
+
+% Formulate the quadratic programming problem
+H = eye(num_features); % Hessian matrix for the quadratic term
+f = zeros(num_features, 1); % Linear term
+A = -diag(Y) * X; % Constraint matrix for inequality (Ax <= b)
+b = -ones(num_samples, 1); % Constraint vector
+lb = []; % Lower bound
+ub = []; % Upper bound
+
+% Solve the quadratic programming problem
+w = quadprog(H, f, A, b, [], [], lb, ub);
+
+% Extract bias term (b) using the support vectors
+support_vector_indices = find(abs(A * w - 1) < 1e-3); % Threshold for support vectors
+b = mean(Y(support_vector_indices) - X(support_vector_indices, :) * w);
+
+% Display the calculated weights and bias
+disp('Weights (w):');
+disp(w);
+disp('Bias (b):');
+disp(b);
