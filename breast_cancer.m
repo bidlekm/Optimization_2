@@ -9,9 +9,10 @@ Y_test = Y(501:569,:);
 X_train = X(1:500,:);
 X_test = X(501:569,:);
 
-C = 1000;
+C = 10;
 
 n = size(X_train, 1);
+H = zeros(n,n);
 for i = 1:n
     for j = 1:n
         H(i, j) = Y_train(i) * Y_train(j) * (X_train(i, :) * X_train(j, :)');
@@ -30,7 +31,6 @@ alpha = quadprog(H, f, A, b, Aeq, beq, lb, ub);
 w = sum((alpha .* Y_train) .* X_train);
 b = mean(Y_train - (X_train * w'));
 
-% predict on the test dataset
 y_pred = sign(w * X_test' + b)';
 
 % Calculate accuracy
