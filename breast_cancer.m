@@ -9,7 +9,7 @@ Y_test = Y(501:569,:);
 X_train = X(1:500,:);
 X_test = X(501:569,:);
 
-C = 1000;
+C = 1e3;
 
 n = size(X_train, 1);
 for i = 1:n
