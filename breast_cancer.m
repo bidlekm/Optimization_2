@@ -12,7 +12,11 @@ X_test = X(501:569,:);
 C = 1000;
 
 n = size(X_train, 1);
-H = (Y_train * Y_train') .* (X_train * X_train');
+for i = 1:n
+    for j = 1:n
+        H(i, j) = Y_train(i) * Y_train(j) * (X_train(i, :) * X_train(j, :)');
+    end
+end
 f = -ones(n, 1);
 A = [];
 b = [];
